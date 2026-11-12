@@ -1,0 +1,184 @@
+{
+  "config_version": 4,
+  "model": {
+    "path": "best_v16.pt",
+    "image_size": 640
+  },
+  "people_model": {
+    "path": "yolo26m.pt",
+    "image_size": 640,
+    "person_confidence": 0.45,
+    "exclude_iou": 0.55,
+    "exclude_inside": 0.9,
+    "exclude_area_ratio": 0.45
+  },
+  "cameras": [
+    {
+      "name": "Camara IP - Celular",
+      "enabled": true,
+      "source": "rtsp://admin:Cardinova2026@192.168.100.67:554/h264/ch1/main/av_stream"
+    }
+  ],
+  "active_zone": "Almacen",
+  "zones": {
+    "Doblado": {
+      "description": "Chasis base y cavidad hueca; no se permiten piezas viniladas.",
+      "blocked": [],
+      "allowed": [
+        "chasis_base",
+        "cavidad_hueca"
+      ]
+    },
+    "Estructurado": {
+      "description": "Puertas y paneles estructurales; no se permiten piezas viniladas.",
+      "blocked": [],
+      "allowed": [
+        "chasis_base",
+        "puerta_inferior",
+        "puerta_sup_chapa",
+        "puerta_sup_panel"
+      ]
+    },
+    "Vinilado": {
+      "description": "Solo piezas viniladas.",
+      "blocked": [],
+      "allowed": [
+        "chasis_vinilado"
+      ]
+    },
+    "Almacen": {
+      "description": "Solo piezas viniladas terminadas.",
+      "blocked": [],
+      "allowed": [
+        "chasis_vinilado"
+      ]
+    }
+  },
+  "composite_rules": [
+    {
+      "name": "Chasis armado",
+      "parent_class": "chasis_base",
+      "required_classes": [
+        "puerta_sup_panel",
+        "puerta_sup_chapa"
+      ],
+      "exclusive": false,
+      "hide_components": true
+    },
+    {
+      "name": "Chasis doblado",
+      "parent_class": "chasis_base",
+      "required_classes": [
+        "cavidad_hueca"
+      ],
+      "exclusive": true,
+      "hide_components": true
+    }
+  ],
+  "classes": [
+    "cavidad_hueca",
+    "chasis_base",
+    "chasis_vinilado",
+    "puerta_inferior",
+    "puerta_sup_chapa",
+    "puerta_sup_panel"
+  ],
+  "detection": {
+    "confidence_start": 0.65,
+    "confidence_keep": 0.3,
+    "min_box_area_ratio": 0.002,
+    "composite_containment": 0.7
+  },
+  "duplicates": {
+    "same_class_iou": 0.75,
+    "containment": 0.7,
+    "cross_class_iou": 0.85,
+    "center_fraction": 0.12,
+    "people_containment": 0.9
+  },
+  "tracker": {
+    "match_iou": 0.3,
+    "min_hits": 2,
+    "max_age_s": 4.0,
+    "unconfirmed_age_s": 2.5,
+    "box_alpha": 0.6,
+    "deadband": 0.03,
+    "conf_alpha": 0.5,
+    "class_decay": 0.8
+  },
+  "vinyl": {
+    "enabled": true,
+    "class": "chasis_vinilado",
+    "zones": {
+      "Doblado": false,
+      "Estructurado": false,
+      "Vinilado": true,
+      "Almacen": true
+    },
+    "colors": {
+      "azul": "#454163",
+      "naranja": "#FF5D6A",
+      "rosado": "#FF81BD"
+    },
+    "ignore_colors": {
+      "ladrillo": [
+        [
+          10,
+          160,
+          210
+        ],
+        [
+          12,
+          150,
+          175
+        ]
+      ],
+      "piso": [
+        [
+          15,
+          70,
+          150
+        ],
+        [
+          18,
+          60,
+          120
+        ]
+      ]
+    },
+    "tolerance": 80.0,
+    "min_saturation": 35,
+    "min_value": 30,
+    "min_pixel_fraction": 0.04,
+    "dominance": 1.0,
+    "inset": 0.25,
+    "votes_decay": 0.8
+  },
+  "image": {
+    "brightness": 0,
+    "contrast": 1.0,
+    "gamma": 1.0,
+    "saturation": 1.0,
+    "clahe": false,
+    "white_balance": false,
+    "apply_to_preview": false,
+    "show_confidence": true
+  },
+  "processing": {
+    "interval_ms": 1000,
+    "device": null,
+    "half": false
+  },
+  "dataset_capture": {
+    "enabled": false,
+    "folder": "capturas",
+    "low_conf": 0.3,
+    "high_conf": 0.65,
+    "min_interval_s": 10,
+    "max_files": 3000
+  },
+  "display": {
+    "window_width": 960,
+    "window_height": 600
+  }
+}
